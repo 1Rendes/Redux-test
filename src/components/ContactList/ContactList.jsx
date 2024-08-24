@@ -1,18 +1,22 @@
-/* eslint-disable react/prop-types */
+import { useSelector } from "react-redux";
 import Contact from "../Contact/Contact";
 import css from "./ContactList.module.css";
 
-const ContactList = ({ list, onDeleteContact }) => {
+const getVisibleList = (list, statusFilter) => {
+  return list.filter((item) =>
+    item.name.toLowerCase().includes(statusFilter.toLowerCase())
+  );
+};
+
+const ContactList = () => {
+  const list = useSelector((state) => state.contacts.items);
+  const statusFilter = useSelector((state) => state.filters.status);
+  const visibleList = getVisibleList(list, statusFilter);
+
   return (
     <ul className={css.list}>
-      {list.map(({ name, number, id }) => (
-        <Contact
-          key={id}
-          id={id}
-          name={name}
-          number={number}
-          onDeleteContact={onDeleteContact}
-        />
+      {visibleList.map(({ name, number, id }) => (
+        <Contact key={id} id={id} name={name} number={number} />
       ))}
     </ul>
   );

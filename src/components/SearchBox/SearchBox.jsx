@@ -1,9 +1,18 @@
-/* eslint-disable react/prop-types */
 import { useId } from "react";
 import css from "./SearchBox.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilter } from "../../redux/store";
 
-const SearchBox = ({ value, onFilter }) => {
+const SearchBox = () => {
   const filterId = useId();
+  const dispatch = useDispatch();
+  const filter = useSelector((state) => state.filters.status);
+
+  const handleFilter = (e) => {
+    const value = e.target.value;
+    dispatch(setFilter(value));
+  };
+
   return (
     <div className={css.container}>
       <label htmlFor={filterId}>Find contacts by name</label>
@@ -11,8 +20,8 @@ const SearchBox = ({ value, onFilter }) => {
         className={css.field}
         id={filterId}
         type="text"
-        value={value}
-        onChange={(e) => onFilter(e.target.value)}
+        value={filter}
+        onChange={handleFilter}
       />
     </div>
   );
